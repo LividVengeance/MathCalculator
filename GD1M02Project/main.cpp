@@ -18,6 +18,7 @@
 #include <windows.h>   // Include all the windows headers.
 #include <windowsx.h>  // Include useful macros.
 #include <math.h>
+#include <time.h>
 
 #include "utils.h"
 #include "resource.h"
@@ -784,7 +785,14 @@ BOOL CALLBACK GaussianDlgProc(HWND _hwnd,
 			GaussianRead(Matrix);
 
 			int inputMult = ReadFromEditBox(_hwnd, IDC_EDIT14);
-			int inputRow = ReadFromEditBox(_hwnd, IDC_EDIT13) + 1;
+			int inputRow = ReadFromEditBox(_hwnd, IDC_EDIT13) - 1;
+
+			// Set input boxe to 0 if row input larger than matrix
+			if (inputRow > 2)
+			{
+				MessageBox(nullptr, TEXT("Please enter a vail row"), TEXT("Row Out Of Range"), MB_OK);
+				WriteToEditBox(_hwnd, IDC_EDIT13, 0);
+			}
 
 			for (int i = 0; i <= 3; i++)
 			{
@@ -856,6 +864,25 @@ BOOL CALLBACK GaussianDlgProc(HWND _hwnd,
 			}
 			break;
 		}
+		
+		case IDC_BUTTON10:
+		{
+			float Matrix[3][4];
+			GaussianRead(Matrix);
+
+			srand(time(NULL));
+
+			for (int i = 0; i < 3; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					float randNum = rand() % 100 + 1;
+					WriteToEditBox(_hwnd, Matrix[i][j], randNum);
+				}
+			}
+			break;
+		}
+
 		}
 	}
 	default:
