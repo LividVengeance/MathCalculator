@@ -1149,7 +1149,41 @@ BOOL CALLBACK QuaternionDlgProc(HWND _hwnd,
 	return FALSE;
 }
 
+void ReadSlerpQuater(HWND _hwnd)
+{
+	float t = ReadFromEditBox(_hwnd, IDC_EDIT9);
 
+	float aI = ReadFromEditBox(_hwnd, IDC_EDIT1);
+	float aJ = ReadFromEditBox(_hwnd, IDC_EDIT2);
+	float aK = ReadFromEditBox(_hwnd, IDC_EDIT3);
+	float aC = ReadFromEditBox(_hwnd, IDC_EDIT4);
+
+	float bI = ReadFromEditBox(_hwnd, IDC_EDIT5);
+	float bJ = ReadFromEditBox(_hwnd, IDC_EDIT6);
+	float bK = ReadFromEditBox(_hwnd, IDC_EDIT7);
+	float bC = ReadFromEditBox(_hwnd, IDC_EDIT8);
+}
+
+void ReadSlerpMatrix(float Matrix[3][4])
+{
+	// Row 1
+	Matrix[0][0] = IDC_EDIT34;
+	Matrix[0][1] = IDC_EDIT35;
+	Matrix[0][2] = IDC_EDIT36;
+	Matrix[0][3] = IDC_EDIT37;
+
+	// Row 2
+	Matrix[1][0] = IDC_EDIT38;
+	Matrix[1][1] = IDC_EDIT39;
+	Matrix[1][2] = IDC_EDIT40;
+	Matrix[1][3] = IDC_EDIT41;
+
+	// Row 3
+	Matrix[2][0] = IDC_EDIT42;
+	Matrix[2][1] = IDC_EDIT43;
+	Matrix[2][2] = IDC_EDIT44;
+	Matrix[2][3] = IDC_EDIT45;
+}
 BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 	UINT _msg,
 	WPARAM _wparam,
@@ -1163,6 +1197,86 @@ BOOL CALLBACK SLERPDlgProc(HWND _hwnd,
 		ShowWindow(_hwnd, SW_HIDE);
 		return TRUE;
 		break;
+	}
+	case WM_COMMAND:
+	{
+		switch (LOWORD(_wparam))
+		{
+		// slerp a, b, t
+		case IDC_BUTTON1:
+		{
+			float t = ReadFromEditBox(_hwnd, IDC_EDIT9);
+
+			float aI = ReadFromEditBox(_hwnd, IDC_EDIT1);
+			float aJ = ReadFromEditBox(_hwnd, IDC_EDIT2);
+			float aK = ReadFromEditBox(_hwnd, IDC_EDIT3);
+			float aC = ReadFromEditBox(_hwnd, IDC_EDIT4);
+
+			float bI = ReadFromEditBox(_hwnd, IDC_EDIT5);
+			float bJ = ReadFromEditBox(_hwnd, IDC_EDIT6);
+			float bK = ReadFromEditBox(_hwnd, IDC_EDIT7);
+			float bC = ReadFromEditBox(_hwnd, IDC_EDIT8);
+				  
+			float rI, rJ, rK, rC;
+
+			float dotProd = ((aC * bC) + (aI * bI) + (aJ * bJ) + (aK * bK));
+
+			if (dotProd < 0)
+			{
+				bC = -bC;
+				bI = -bI;
+				bJ = -bJ;
+				dotProd = -dotProd;
+			}
+
+			float angle = acos(dotProd);
+			float angleTwo = sqrt(1 - dotProd * dotProd);
+
+			float ratA = (sin((1 - t) * angle) / (angleTwo));
+			float ratB = (sin(t * angle) / (angleTwo));
+
+			if (abs(dotProd) >= 1) {
+				rC = aC;
+				rI = aI;
+				rJ = aJ;
+				rK = aK;
+			}
+			else if (abs(angleTwo) < .001) {
+				rC = (aC * 0.5 + bC * 0.5);
+				rI = (aI * 0.5 + bI * 0.5);
+				rJ = (aJ * 0.5 + bJ * 0.5);
+				rK = (aK * 0.5 + bK * 0.5);
+			}
+			else
+			{
+				rC = (aC * ratA + bC * ratB);
+				rI = (aI * ratA + bI * ratB);
+				rJ = (aJ * ratA + bJ * ratB);
+				rK = (aK * ratA + bK * ratB);
+			}
+
+			WriteToEditBox(_hwnd, IDC_EDIT10, rI);
+			WriteToEditBox(_hwnd, IDC_EDIT11, rJ);
+			WriteToEditBox(_hwnd, IDC_EDIT12, rK);
+			WriteToEditBox(_hwnd, IDC_EDIT13, rC);
+			break;
+		}
+		// a
+		case IDC_BUTTON2:
+		{
+			break;
+		}
+		// b
+		case IDC_BUTTON3:
+		{
+			break;
+		}
+		// Matrix slerp a, b, t
+		case IDC_BUTTON4:
+		{
+			break;
+		}
+		}
 	}
 	default:
 		break;
