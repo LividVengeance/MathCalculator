@@ -689,6 +689,116 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 	return FALSE;
 }
 
+void GetIDTransformMatrixRMF(HWND _hwnd, float MatrixRMF[4][4])
+{
+	// Row 1
+	MatrixRMF[0][0] = IDC_EDIT16;
+	MatrixRMF[0][1] = IDC_EDIT18;
+	MatrixRMF[0][2] = IDC_EDIT19;
+	MatrixRMF[0][3] = IDC_EDIT20;
+
+	// Row 2
+	MatrixRMF[1][0] = IDC_EDIT21;
+	MatrixRMF[1][1] = IDC_EDIT22;
+	MatrixRMF[1][2] = IDC_EDIT23;
+	MatrixRMF[1][3] = IDC_EDIT8;
+
+	// Row 3
+	MatrixRMF[2][0] = IDC_EDIT9;
+	MatrixRMF[2][1] = IDC_EDIT10;
+	MatrixRMF[2][2] = IDC_EDIT11;
+	MatrixRMF[2][3] = IDC_EDIT12;
+
+	//Row 4
+	MatrixRMF[3][0] = IDC_EDIT24;
+	MatrixRMF[3][1] = IDC_EDIT25;
+	MatrixRMF[3][2] = IDC_EDIT26;
+	MatrixRMF[3][3] = IDC_EDIT27;
+}
+
+void GetIDTransformMatrixCMF(HWND _hwnd, float MatrixCMF[4][4])
+{
+	// Row 1
+	MatrixCMF[0][0] = IDC_EDIT47;
+	MatrixCMF[0][1] = IDC_EDIT48;
+	MatrixCMF[0][2] = IDC_EDIT49;
+	MatrixCMF[0][3] = IDC_EDIT50;
+
+	// Row 2
+	MatrixCMF[1][0] = IDC_EDIT51;
+	MatrixCMF[1][1] = IDC_EDIT52;
+	MatrixCMF[1][2] = IDC_EDIT53;
+	MatrixCMF[1][3] = IDC_EDIT54;
+
+	// Row 3
+	MatrixCMF[2][0] = IDC_EDIT55;
+	MatrixCMF[2][1] = IDC_EDIT56;
+	MatrixCMF[2][2] = IDC_EDIT57;
+	MatrixCMF[2][3] = IDC_EDIT58;
+
+	//Row 4
+	MatrixCMF[3][0] = IDC_EDIT59;
+	MatrixCMF[3][1] = IDC_EDIT60;
+	MatrixCMF[3][2] = IDC_EDIT61;
+	MatrixCMF[3][3] = IDC_EDIT62;
+}
+
+void ReadTransformInputs(HWND _hwnd)
+{
+	// Scale Factor
+	float scaleX = ReadFromEditBox(_hwnd, IDC_EDIT1);
+	float scaleY = ReadFromEditBox(_hwnd, IDC_EDIT2);
+	float scaleZ = ReadFromEditBox(_hwnd, IDC_EDIT3);
+
+	// Translation Amount
+	float transX = ReadFromEditBox(_hwnd, IDC_EDIT4);
+	float transY = ReadFromEditBox(_hwnd, IDC_EDIT5);
+	float transZ = ReadFromEditBox(_hwnd, IDC_EDIT6);
+
+	// Rotation Details
+	float rotX = ReadFromEditBox(_hwnd, IDC_EDIT7);
+	float rotY = ReadFromEditBox(_hwnd, IDC_EDIT28);
+	float rotZ = ReadFromEditBox(_hwnd, IDC_EDIT30);
+
+	float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT13);
+
+	// Projection
+	float proX = ReadFromEditBox(_hwnd, IDC_EDIT14);
+	float proY = ReadFromEditBox(_hwnd, IDC_EDIT24);
+	float proZ = ReadFromEditBox(_hwnd, IDC_EDIT31);
+
+	float proDist = ReadFromEditBox(_hwnd, IDC_EDIT13);
+}
+
+void IDMatrix(HWND _hwnd, float Matrix[4][4])
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (j == i)
+			{
+				Matrix[i][j] = 1;
+			}
+			else
+			{
+				Matrix[i][j] =  0;
+			}
+		}
+	}
+}
+
+void TrasnsToEdit(HWND _hwnd, float Matrix2[4][4], float Matrix[4][4])
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			WriteToEditBox(_hwnd, Matrix2[i][j], Matrix[i][j]);
+			
+		}
+	}
+}
 
 BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 	UINT _msg,
@@ -703,6 +813,31 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 		ShowWindow(_hwnd, SW_HIDE);
 		return TRUE;
 		break;
+	}
+
+	case WM_COMMAND:
+	{
+		switch (LOWORD(_wparam))
+		{
+			// Compute
+		case IDC_BUTTON4:
+		{
+			float MatrixRMF[4][4], MatrixRMFID[4][4], MatrixCMF[4][4], MatrixCMFID[4][4];
+			
+			// Setting RMF Matrix to Identity Matrix
+			GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
+			IDMatrix(_hwnd, MatrixRMF);
+			TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
+
+			// Setting CMF Matrix to Identity Matrix
+			GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
+			IDMatrix(_hwnd, MatrixCMF);
+			TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+			
+			break;
+		}
+
+		}
 	}
 	default:
 		break;
@@ -890,7 +1025,6 @@ BOOL CALLBACK GaussianDlgProc(HWND _hwnd,
 	}
 	return FALSE;
 }
-
 
 BOOL CALLBACK QuaternionDlgProc(HWND _hwnd,
 	UINT _msg,
