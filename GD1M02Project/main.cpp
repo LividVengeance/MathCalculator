@@ -22,11 +22,13 @@
 
 #include "utils.h"
 #include "resource.h"
+#include "transformation.h"
 
 #define WINDOW_CLASS_NAME L"WINCLASS1"
 
 HMENU g_hMenu;
 HWND g_hDlgMatrix, g_hDlgTransformation, g_hDlgGaussian, g_hDlgQuaternion, g_hDlgSLERP;
+HWND hComboBox;
 
 void GameLoop()
 {
@@ -689,123 +691,12 @@ BOOL CALLBACK MatrixDlgProc(HWND _hwnd,
 	return FALSE;
 }
 
-void GetIDTransformMatrixRMF(HWND _hwnd, float MatrixRMF[4][4])
-{
-	// Row 1
-	MatrixRMF[0][0] = IDC_EDIT16;
-	MatrixRMF[0][1] = IDC_EDIT18;
-	MatrixRMF[0][2] = IDC_EDIT19;
-	MatrixRMF[0][3] = IDC_EDIT20;
-
-	// Row 2
-	MatrixRMF[1][0] = IDC_EDIT21;
-	MatrixRMF[1][1] = IDC_EDIT22;
-	MatrixRMF[1][2] = IDC_EDIT23;
-	MatrixRMF[1][3] = IDC_EDIT8;
-
-	// Row 3
-	MatrixRMF[2][0] = IDC_EDIT9;
-	MatrixRMF[2][1] = IDC_EDIT10;
-	MatrixRMF[2][2] = IDC_EDIT11;
-	MatrixRMF[2][3] = IDC_EDIT12;
-
-	//Row 4
-	MatrixRMF[3][0] = IDC_EDIT24;
-	MatrixRMF[3][1] = IDC_EDIT25;
-	MatrixRMF[3][2] = IDC_EDIT26;
-	MatrixRMF[3][3] = IDC_EDIT27;
-}
-
-void GetIDTransformMatrixCMF(HWND _hwnd, float MatrixCMF[4][4])
-{
-	// Row 1
-	MatrixCMF[0][0] = IDC_EDIT47;
-	MatrixCMF[0][1] = IDC_EDIT48;
-	MatrixCMF[0][2] = IDC_EDIT49;
-	MatrixCMF[0][3] = IDC_EDIT50;
-
-	// Row 2
-	MatrixCMF[1][0] = IDC_EDIT51;
-	MatrixCMF[1][1] = IDC_EDIT52;
-	MatrixCMF[1][2] = IDC_EDIT53;
-	MatrixCMF[1][3] = IDC_EDIT54;
-
-	// Row 3
-	MatrixCMF[2][0] = IDC_EDIT55;
-	MatrixCMF[2][1] = IDC_EDIT56;
-	MatrixCMF[2][2] = IDC_EDIT57;
-	MatrixCMF[2][3] = IDC_EDIT58;
-
-	//Row 4
-	MatrixCMF[3][0] = IDC_EDIT59;
-	MatrixCMF[3][1] = IDC_EDIT60;
-	MatrixCMF[3][2] = IDC_EDIT61;
-	MatrixCMF[3][3] = IDC_EDIT62;
-}
-
-void ReadTransformInputs(HWND _hwnd)
-{
-	// Scale Factor
-	float scaleX = ReadFromEditBox(_hwnd, IDC_EDIT1);
-	float scaleY = ReadFromEditBox(_hwnd, IDC_EDIT2);
-	float scaleZ = ReadFromEditBox(_hwnd, IDC_EDIT3);
-
-	// Translation Amount
-	float transX = ReadFromEditBox(_hwnd, IDC_EDIT4);
-	float transY = ReadFromEditBox(_hwnd, IDC_EDIT5);
-	float transZ = ReadFromEditBox(_hwnd, IDC_EDIT6);
-
-	// Rotation Details
-	float rotX = ReadFromEditBox(_hwnd, IDC_EDIT7);
-	float rotY = ReadFromEditBox(_hwnd, IDC_EDIT28);
-	float rotZ = ReadFromEditBox(_hwnd, IDC_EDIT30);
-
-	float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT13);
-
-	// Projection
-	float proX = ReadFromEditBox(_hwnd, IDC_EDIT14);
-	float proY = ReadFromEditBox(_hwnd, IDC_EDIT24);
-	float proZ = ReadFromEditBox(_hwnd, IDC_EDIT31);
-
-	float proDist = ReadFromEditBox(_hwnd, IDC_EDIT13);
-}
-
-void IDMatrix(HWND _hwnd, float Matrix[4][4])
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			if (j == i)
-			{
-				Matrix[i][j] = 1;
-			}
-			else
-			{
-				Matrix[i][j] =  0;
-			}
-		}
-	}
-}
-
-void TrasnsToEdit(HWND _hwnd, float Matrix2[4][4], float Matrix[4][4])
-{
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			WriteToEditBox(_hwnd, Matrix2[i][j], Matrix[i][j]);
-			
-		}
-	}
-}
-
 BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 	UINT _msg,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
-
+	char cMsgText[256];;
 	switch (_msg)
 	{
 	case WM_CLOSE:
@@ -819,6 +710,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 	{
 		switch (LOWORD(_wparam))
 		{
+
 			// Compute
 		case IDC_BUTTON4:
 		{
@@ -833,10 +725,57 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 			GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
 			IDMatrix(_hwnd, MatrixCMF);
 			TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+
 			
 			break;
 		}
+		case IDC_BUTTON16:
+		{
+			float scaleX = ReadFromEditBox(_hwnd, IDC_EDIT1);
+			float scaleY = ReadFromEditBox(_hwnd, IDC_EDIT2);
+			float scaleZ = ReadFromEditBox(_hwnd, IDC_EDIT3);
 
+			
+			static float scaleMatrix[4][4], MatrixRMFID[4][4];
+
+			float MatrixCMF[4][4] = {
+			
+									1,2,3,4,
+									5,6,7,8,
+									9,10,11,12,
+									13,14,15,16};
+
+			GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
+
+			ScaleMatrix(scaleMatrix, scaleX, scaleY, scaleZ);
+
+			TrasnsToEdit(_hwnd, MatrixRMFID, scaleMatrix);
+
+			
+			MultiplyMatrix(scaleMatrix, MatrixCMF);
+			
+			TrasnsToEdit(_hwnd, MatrixRMFID, scaleMatrix);
+			break;
+		}
+
+
+		switch (HIWORD(_wparam))
+		{
+		case CBN_SELENDOK:
+		{
+
+			int iIndex = SendMessage(hComboBox, CB_GETCURSEL, 0, 0);
+			//check = iIndex;
+
+			SendMessage(hComboBox, CB_GETLBTEXT, (WPARAM)iIndex, (LPARAM)cMsgText);
+
+			break;
+		}
+		default:
+			break;
+		}
+		return TRUE;
+		break;
 		}
 	}
 	default:
@@ -1476,6 +1415,10 @@ int WINAPI WinMain(HINSTANCE _hInstance,
 	g_hDlgGaussian = CreateDialog(_hInstance, MAKEINTRESOURCE(IDD_DialogGaussian), hwnd, (DLGPROC)GaussianDlgProc);
 	g_hDlgQuaternion = CreateDialog(_hInstance, MAKEINTRESOURCE(IDD_DialogQuaternion), hwnd, (DLGPROC)QuaternionDlgProc);
 	g_hDlgSLERP = CreateDialog(_hInstance, MAKEINTRESOURCE(IDD_DialogSLERP), hwnd, (DLGPROC)SLERPDlgProc);
+
+	hComboBox = GetDlgItem(g_hDlgTransformation, IDC_COMBO1);
+	SendMessage(hComboBox, CB_ADDSTRING, 0, (LPARAM)L"Scaling and Skewing");
+	SendMessage(hComboBox, CB_ADDSTRING, 0, (LPARAM)L"pee pee");
 
 	// Enter main event loop
 	while (true)

@@ -1,7 +1,7 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
 // Used by GD1M02Project.rc
-
+//
 #define IDOK2                           3
 #define IDOK3                           4
 #define IDCANCEL2                       5
@@ -73,7 +73,9 @@
 #define IDC_EDIT_A13                    1032
 #define IDC_EDIT33                      1033
 #define IDC_EDIT_AScaled                1033
+#define IDC_BUTTON16                    1033
 #define IDC_EDIT34                      1034
+#define IDC_BUTTON17                    1034
 #define IDC_EDIT35                      1035
 #define IDC_EDIT36                      1036
 #define IDC_EDIT37                      1037
@@ -180,7 +182,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        101
+#define _APS_NEXT_RESOURCE_VALUE        102
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1001
 #define _APS_NEXT_SYMED_VALUE           101
