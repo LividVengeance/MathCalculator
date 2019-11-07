@@ -716,16 +716,18 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 		{
 			float MatrixRMF[4][4], MatrixRMFID[4][4], MatrixCMF[4][4], MatrixCMFID[4][4];
 			
-			// Setting RMF Matrix to Identity Matrix
-			GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
-			IDMatrix(_hwnd, MatrixRMF);
-			TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
+			if (IsDlgButtonChecked(_hwnd, IDC_CHECK1))
+			{
+				// Setting RMF Matrix to Identity Matrix
+				GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
+				IDMatrix(_hwnd, MatrixRMF);
+				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 
-			// Setting CMF Matrix to Identity Matrix
-			GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
-			IDMatrix(_hwnd, MatrixCMF);
-			TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
-
+				// Setting CMF Matrix to Identity Matrix
+				GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
+				IDMatrix(_hwnd, MatrixCMF);
+				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+			}
 			
 			break;
 		}

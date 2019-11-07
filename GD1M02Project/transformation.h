@@ -72,16 +72,16 @@ void ReadTransformInputs(HWND _hwnd)
 	float transZ = ReadFromEditBox(_hwnd, IDC_EDIT6);
 
 	// Rotation Details
-	float rotX = ReadFromEditBox(_hwnd, IDC_EDIT7);
-	float rotY = ReadFromEditBox(_hwnd, IDC_EDIT28);
-	float rotZ = ReadFromEditBox(_hwnd, IDC_EDIT30);
+	bool rotX = IsDlgButtonChecked(_hwnd, IDC_CHECK1);
+	bool rotY = IsDlgButtonChecked(_hwnd, IDC_CHECK2);
+	bool rotZ = IsDlgButtonChecked(_hwnd, IDC_CHECK3);
 
 	float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT13);
 
 	// Projection
-	float proX = ReadFromEditBox(_hwnd, IDC_EDIT14);
-	float proY = ReadFromEditBox(_hwnd, IDC_EDIT24);
-	float proZ = ReadFromEditBox(_hwnd, IDC_EDIT31);
+	bool proX = IsDlgButtonChecked(_hwnd, IDC_CHECK4);
+	bool proY = IsDlgButtonChecked(_hwnd, IDC_CHECK5);
+	bool proZ = IsDlgButtonChecked(_hwnd, IDC_CHECK6);
 
 	float proDist = ReadFromEditBox(_hwnd, IDC_EDIT13);
 }
@@ -218,9 +218,128 @@ void TranslateMatrix(float Matrix[4][4], float transX, float transY, float trans
 	}
 }
 
-void RotationMatrix()
+void XRotationMatrix(float Matrix[4][4], float angle)
 {
 
+	// Rotation X Matrix
+
+	float TempX[4][4];
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i == 0 and j == 0)
+			{
+				TempX[i][j] = 1;
+			}
+			else if (i == 1 and j == 1)
+			{
+				TempX[i][j] = cos(angle);
+			}
+			else if (i == 1 and j == 2)
+			{
+				TempX[i][j] = -sin(angle);
+			}
+			else if (i == 2 and j == 1)
+			{
+				TempX[i][j] = sin(angle);
+			}
+			else if (i == 2 and j == 2)
+			{
+				TempX[i][j] = cos(angle);
+			}
+			else if (i == 3 and j == 3)
+			{
+				TempX[i][j] = 1;
+			}
+			else
+			{
+				TempX[i][j] = 0;
+			}
+		}
+	}
+}
+
+void YRotaionMatrix(float Matrix[4][4], float angle)
+{
+	// Rotation Y Matrix
+
+	float TempX[4][4];
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i == 0 and j == 0)
+			{
+				TempX[i][j] = cos(angle);
+			}
+			else if (i == 0 and j == 2)
+			{
+				TempX[i][j] = sin(angle);
+			}
+			else if (i == 1 and j == 1)
+			{
+				TempX[i][j] = 1;
+			}
+			else if (i == 2 and j == 0)
+			{
+				TempX[i][j] = -sin(angle);
+			}
+			else if (i == 2 and j == 2)
+			{
+				TempX[i][j] = cos(angle);
+			}
+			else if (i == 3 and j == 3)
+			{
+				TempX[i][j] = 1;
+			}
+			else
+			{
+				TempX[i][j] = 0;
+			}
+		}
+	}
+}
+
+void ZRotationMatrix(float Matrix[4][4], float angle)
+{
+	// Rotation Z Matrix
+
+	float TempX[4][4];
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i == 0 and j == 0)
+			{
+				TempX[i][j] = cos(angle);
+			}
+			else if (i == 0 and j == 1)
+			{
+				TempX[i][j] = -sin(angle);
+			}
+			else if (i == 1 and j == 0)
+			{
+				TempX[i][j] = sin(angle);
+			}
+			else if (i == 1 and j == 1)
+			{
+				TempX[i][j] = cos(angle);
+			}
+			else if (i == 2 and j == 2)
+			{
+				TempX[i][j] = 1;
+			}
+			else if (i == 3 and j == 3)
+			{
+				TempX[i][j] = 1;
+			}
+			else
+			{
+				TempX[i][j] = 0;
+			}
+		}
+	}
 }
 
 void ProjectionMatrix()
