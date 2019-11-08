@@ -104,19 +104,19 @@ void IDMatrix(HWND _hwnd, float Matrix[4][4])
 	}
 }
 
-void TrasnsToEdit(HWND _hwnd, float Matrix2[4][4], float Matrix[4][4])
+void TrasnsToEdit(HWND _hwnd, float MatrixID[4][4], float Matrix[4][4])
 {
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			WriteToEditBox(_hwnd, Matrix2[i][j], Matrix[i][j]);
+			WriteToEditBox(_hwnd, MatrixID[i][j], Matrix[i][j]);
 
 		}
 	}
 }
 
-void ScaleMatrix(float Matrix[4][4], float scaleX, float scaleY, float scaleZ)
+void ScaleFactorMatrix(float Matrix[4][4], float scaleX, float scaleY, float scaleZ)
 {
 	// Creating a Scale Matrix
 	float scaleMatrix[4][4];
@@ -176,6 +176,17 @@ void MultiplyMatrix(float Matrix[4][4], float Matrix2[4][4])
 		}
 	}
 
+}
+
+void TransposeMatrix(float Matrix[4][4], float Matrix2[4][4])
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			Matrix2[i][j] = Matrix[j][i];
+		}
+	}
 }
 
 void TranslateMatrix(float Matrix[4][4], float transX, float transY, float transZ)
@@ -260,7 +271,7 @@ void XRotationMatrix(float Matrix[4][4], float angle)
 	}
 }
 
-void YRotaionMatrix(float Matrix[4][4], float angle)
+void YRotationMatrix(float Matrix[4][4], float angle)
 {
 	// Rotation Y Matrix
 

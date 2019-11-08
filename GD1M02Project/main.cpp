@@ -696,9 +696,33 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 	WPARAM _wparam,
 	LPARAM _lparam)
 {
-	char cMsgText[256];;
+	HWND items = NULL;
+	static int comboItemIndex;
 	switch (_msg)
 	{
+	case WM_INITDIALOG:
+
+		items = GetDlgItem(_hwnd, IDC_COMBO1);
+		for (int i = 0; i < 4; i++)
+		{
+			switch (i)
+			{
+			case 0:
+				SendMessage(items, CB_ADDSTRING, 0, (LPARAM)L"Scaling and Skewing");
+				break;
+			case 1:
+				SendMessage(items, CB_ADDSTRING, 0, (LPARAM)L"Translation");
+				break;
+			case 2:
+				SendMessage(items, CB_ADDSTRING, 0, (LPARAM)L"Rotation");
+				break;
+			case 3:
+				SendMessage(items, CB_ADDSTRING, 0, (LPARAM)L"Projection");
+				break;
+			}
+		}
+		break;
+	
 	case WM_CLOSE:
 	{
 		ShowWindow(_hwnd, SW_HIDE);
@@ -708,13 +732,161 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 
 	case WM_COMMAND:
 	{
+		
 		switch (LOWORD(_wparam))
 		{
+			if (HIWORD(_wparam) == CBN_SELCHANGE)
+			{
+				comboItemIndex = SendMessage((HWND)_lparam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+			}
 
 			// Compute
 		case IDC_BUTTON4:
 		{
 			float MatrixRMF[4][4], MatrixRMFID[4][4], MatrixCMF[4][4], MatrixCMFID[4][4];
+
+			// Getting Input Box IDs
+			GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
+			GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
+
+			if (comboItemIndex == 0)
+			{
+				/// Scaling and Skewing
+
+				// Scale Factor Inputs
+				float scaleX = ReadFromEditBox(_hwnd, IDC_EDIT1);
+				float scaleY = ReadFromEditBox(_hwnd, IDC_EDIT2);
+				float scaleZ = ReadFromEditBox(_hwnd, IDC_EDIT3);
+
+				// Create an Empty Matrix
+				float ScaleMatrix[4][4];
+
+				// Creating a Scale Matrix Given Inputs
+				ScaleFactorMatrix(ScaleMatrix, scaleX, scaleY, scaleZ);
+
+				// Multiplyig Scale Matrix With RMF Matrix
+				MultiplyMatrix(MatrixRMF, ScaleMatrix);
+
+				// Getting Column-Major-Format
+				TransposeMatrix(MatrixCMF, MatrixRMF);
+
+				// Outputting to Boxes
+				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
+				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+
+			}
+			else if (comboItemIndex == 1)
+			{
+				/// Translation
+
+				// Translation Amount Inputs
+				float transX = ReadFromEditBox(_hwnd, IDC_EDIT4);
+				float transY = ReadFromEditBox(_hwnd, IDC_EDIT5);
+				float transZ = ReadFromEditBox(_hwnd, IDC_EDIT6);
+
+				// Creating a translation matrix given inputs
+				float TransMatrix[4][4];
+				TranslateMatrix(TransMatrix, transX, transY, transZ);
+
+				// Multiplyig Translation Matrix With RMF Matrix
+				MultiplyMatrix(MatrixRMF, TransMatrix);
+
+				// Getting Column-Major-Format
+				TransposeMatrix(MatrixCMF, MatrixRMF);
+
+				// Outputting to Boxes
+				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
+				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+			}
+			else if (comboItemIndex == 2)
+			{
+				/// Rotation
+
+				// Rotation Details Inputs
+				bool rotX = IsDlgButtonChecked(_hwnd, IDC_CHECK1);
+				bool rotY = IsDlgButtonChecked(_hwnd, IDC_CHECK2);
+				bool rotZ = IsDlgButtonChecked(_hwnd, IDC_CHECK3);
+
+				float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT13);
+
+				// Create an Empty Matrix
+				float RotationMatrix[4][4];
+
+				// Axis of Rotaion X
+				if (IsDlgButtonChecked(_hwnd, IDC_CHECK1))
+				{
+					// Create a Rotation Matrix given rotX, rotY, rotZ
+					XRotationMatrix(RotationMatrix, rotAngle);
+				}
+				// Axis of Rotaion Y
+				if (IsDlgButtonChecked(_hwnd, IDC_CHECK2))
+				{
+					// Create a Rotation Matrix given rotX, rotY, rotZ
+					YRotationMatrix(RotationMatrix, rotAngle);
+				}
+				// Axis of Rotaion Z
+				if (IsDlgButtonChecked(_hwnd, IDC_CHECK3))
+				{
+					ZRotationMatrix(RotationMatrix, rotAngle);
+				}
+				// Given No Input From User
+				else
+				{
+					
+				}
+
+				// Multiplying Rotation Matrix and RMF Matrix
+				MultiplyMatrix(RotationMatrix, MatrixRMF);
+
+				// Getting Column-Major-Format
+				TransposeMatrix(MatrixCMF, MatrixRMF);
+
+				// Outputting to Boxes
+				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
+				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+
+			}
+			else if (comboItemIndex == 3)
+			{
+				/// Projection
+
+				// Projection Inputs
+				bool proX = IsDlgButtonChecked(_hwnd, IDC_CHECK4);
+				bool proY = IsDlgButtonChecked(_hwnd, IDC_CHECK5);
+				bool proZ = IsDlgButtonChecked(_hwnd, IDC_CHECK6);
+
+				float proDist = ReadFromEditBox(_hwnd, IDC_EDIT13);
+
+				// Axis of Viewing X Given Distance
+				if (IsDlgButtonChecked(_hwnd, IDC_CHECK4))
+				{
+					
+				}
+				// Axis of Viewing Y Given Distance
+				if (IsDlgButtonChecked(_hwnd, IDC_CHECK5))
+				{
+					
+				}
+				// Axis of Viewing Z Given Distance
+				if (IsDlgButtonChecked(_hwnd, IDC_CHECK6))
+				{
+					
+				}
+				// Given No Input From User
+				else
+				{
+					
+				}
+
+				// Getting Column-Major-Format
+				TransposeMatrix(MatrixCMF, MatrixRMF);
+
+				// Outputting to Boxes
+				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
+				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+			}
+
+			
 			
 			if (IsDlgButtonChecked(_hwnd, IDC_CHECK1))
 			{
@@ -729,51 +901,6 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 			}
 			
-			break;
-		}
-		case IDC_BUTTON16:
-		{
-			float scaleX = ReadFromEditBox(_hwnd, IDC_EDIT1);
-			float scaleY = ReadFromEditBox(_hwnd, IDC_EDIT2);
-			float scaleZ = ReadFromEditBox(_hwnd, IDC_EDIT3);
-
-			
-			static float scaleMatrix[4][4], MatrixRMFID[4][4];
-
-			float MatrixCMF[4][4] = {
-			
-									1,2,3,4,
-									5,6,7,8,
-									9,10,11,12,
-									13,14,15,16};
-
-			GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
-
-			ScaleMatrix(scaleMatrix, scaleX, scaleY, scaleZ);
-
-			TrasnsToEdit(_hwnd, MatrixRMFID, scaleMatrix);
-
-			
-			MultiplyMatrix(scaleMatrix, MatrixCMF);
-			
-			TrasnsToEdit(_hwnd, MatrixRMFID, scaleMatrix);
-			break;
-		}
-
-
-		switch (HIWORD(_wparam))
-		{
-		case CBN_SELENDOK:
-		{
-
-			int iIndex = SendMessage(hComboBox, CB_GETCURSEL, 0, 0);
-			//check = iIndex;
-
-			SendMessage(hComboBox, CB_GETLBTEXT, (WPARAM)iIndex, (LPARAM)cMsgText);
-
-			break;
-		}
-		default:
 			break;
 		}
 		return TRUE;
@@ -1418,9 +1545,7 @@ int WINAPI WinMain(HINSTANCE _hInstance,
 	g_hDlgQuaternion = CreateDialog(_hInstance, MAKEINTRESOURCE(IDD_DialogQuaternion), hwnd, (DLGPROC)QuaternionDlgProc);
 	g_hDlgSLERP = CreateDialog(_hInstance, MAKEINTRESOURCE(IDD_DialogSLERP), hwnd, (DLGPROC)SLERPDlgProc);
 
-	hComboBox = GetDlgItem(g_hDlgTransformation, IDC_COMBO1);
-	SendMessage(hComboBox, CB_ADDSTRING, 0, (LPARAM)L"Scaling and Skewing");
-	SendMessage(hComboBox, CB_ADDSTRING, 0, (LPARAM)L"pee pee");
+	
 
 	// Enter main event loop
 	while (true)
