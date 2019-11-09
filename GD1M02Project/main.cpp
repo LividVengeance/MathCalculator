@@ -732,13 +732,64 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 
 	case WM_COMMAND:
 	{
-		
+		if (HIWORD(_wparam) == CBN_SELCHANGE)
+		{
+			comboItemIndex = SendMessage((HWND)_lparam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+		}
+
 		switch (LOWORD(_wparam))
 		{
-			if (HIWORD(_wparam) == CBN_SELCHANGE)
+		case IDC_CHECK1:
+		{
+			// Allowing For Only Check One To Be Clicked
+			switch (HIWORD(_wparam))
 			{
-				comboItemIndex = SendMessage((HWND)_lparam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+			case BN_CLICKED:
+			{
+				if (SendDlgItemMessage(_hwnd, IDC_CHECK3, BM_GETCHECK, 0, 0))
+				{
+					CheckDlgButton(_hwnd, IDC_CHECK2, 0);
+					CheckDlgButton(_hwnd, IDC_CHECK3, 0);
+				}
 			}
+			break;
+			}
+			break;
+		}
+		case IDC_CHECK2:
+		{
+			// Allowing For Only Check Two To Be Clicked
+			switch (HIWORD(_wparam))
+			{
+			case BN_CLICKED:
+			{
+				if (SendDlgItemMessage(_hwnd, IDC_CHECK2, BM_GETCHECK, 0, 0))
+				{
+					CheckDlgButton(_hwnd, IDC_CHECK1, 0);
+					CheckDlgButton(_hwnd, IDC_CHECK3, 0);
+				}
+			}
+			break;
+			}
+			break;
+		}
+		case IDC_CHECK3:
+		{
+			// Allowing For Only Check Three To Be Clicked
+			switch(HIWORD(_wparam))
+			{
+			case BN_CLICKED:
+			{
+				if (SendDlgItemMessage(_hwnd, IDC_CHECK3, BM_GETCHECK, 0, 0))
+				{
+				CheckDlgButton(_hwnd, IDC_CHECK1, 0);
+				CheckDlgButton(_hwnd, IDC_CHECK2, 0);
+				}
+			}
+			break;
+			}
+			break;
+		}
 
 			// Compute
 		case IDC_BUTTON4:
@@ -774,6 +825,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 
+				break;
 			}
 			else if (comboItemIndex == 1)
 			{
@@ -797,6 +849,8 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				// Outputting to Boxes
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+
+				break;
 			}
 			else if (comboItemIndex == 2)
 			{
@@ -819,20 +873,20 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 					XRotationMatrix(RotationMatrix, rotAngle);
 				}
 				// Axis of Rotaion Y
-				if (IsDlgButtonChecked(_hwnd, IDC_CHECK2))
+				else if (IsDlgButtonChecked(_hwnd, IDC_CHECK2))
 				{
 					// Create a Rotation Matrix given rotX, rotY, rotZ
 					YRotationMatrix(RotationMatrix, rotAngle);
 				}
 				// Axis of Rotaion Z
-				if (IsDlgButtonChecked(_hwnd, IDC_CHECK3))
+				else if (IsDlgButtonChecked(_hwnd, IDC_CHECK3))
 				{
 					ZRotationMatrix(RotationMatrix, rotAngle);
 				}
 				// Given No Input From User
 				else
 				{
-					
+					MessageBox(nullptr, TEXT("Please Select a Axis of Rotaion"), TEXT("No Input"), MB_OK);
 				}
 
 				// Multiplying Rotation Matrix and RMF Matrix
@@ -845,38 +899,20 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 
+				break;
 			}
 			else if (comboItemIndex == 3)
 			{
 				/// Projection
 
 				// Projection Inputs
-				bool proX = IsDlgButtonChecked(_hwnd, IDC_CHECK4);
-				bool proY = IsDlgButtonChecked(_hwnd, IDC_CHECK5);
-				bool proZ = IsDlgButtonChecked(_hwnd, IDC_CHECK6);
+				float proX = IsDlgButtonChecked(_hwnd, IDC_EDIT28);
+				float proY = IsDlgButtonChecked(_hwnd, IDC_EDIT30);
+				float proZ = IsDlgButtonChecked(_hwnd, IDC_EDIT29);
 
 				float proDist = ReadFromEditBox(_hwnd, IDC_EDIT13);
 
-				// Axis of Viewing X Given Distance
-				if (IsDlgButtonChecked(_hwnd, IDC_CHECK4))
-				{
-					
-				}
-				// Axis of Viewing Y Given Distance
-				if (IsDlgButtonChecked(_hwnd, IDC_CHECK5))
-				{
-					
-				}
-				// Axis of Viewing Z Given Distance
-				if (IsDlgButtonChecked(_hwnd, IDC_CHECK6))
-				{
-					
-				}
-				// Given No Input From User
-				else
-				{
-					
-				}
+				// Do things here
 
 				// Getting Column-Major-Format
 				TransposeMatrix(MatrixCMF, MatrixRMF);
@@ -884,10 +920,12 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				// Outputting to Boxes
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+
+				break;
 			}
 
 			
-			
+			/*
 			if (IsDlgButtonChecked(_hwnd, IDC_CHECK1))
 			{
 				// Setting RMF Matrix to Identity Matrix
@@ -900,7 +938,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				IDMatrix(_hwnd, MatrixCMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 			}
-			
+			*/
 			break;
 		}
 		return TRUE;

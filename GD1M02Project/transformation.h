@@ -79,9 +79,9 @@ void ReadTransformInputs(HWND _hwnd)
 	float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT13);
 
 	// Projection
-	bool proX = IsDlgButtonChecked(_hwnd, IDC_CHECK4);
-	bool proY = IsDlgButtonChecked(_hwnd, IDC_CHECK5);
-	bool proZ = IsDlgButtonChecked(_hwnd, IDC_CHECK6);
+	float proX = IsDlgButtonChecked(_hwnd, IDC_EDIT28);
+	float proY = IsDlgButtonChecked(_hwnd, IDC_EDIT30);
+	float proZ = IsDlgButtonChecked(_hwnd, IDC_EDIT29);
 
 	float proDist = ReadFromEditBox(_hwnd, IDC_EDIT13);
 }
