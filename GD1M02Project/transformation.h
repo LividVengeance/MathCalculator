@@ -234,41 +234,39 @@ void TranslateMatrix(float Matrix[4][4], float transX, float transY, float trans
 
 void XRotationMatrix(float Matrix[4][4], float angle)
 {
-
 	// Rotation X Matrix
 
-	float TempX[4][4];
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
 			if (i == 0 and j == 0)
 			{
-				TempX[i][j] = 1;
+				Matrix[i][j] = 1;
 			}
 			else if (i == 1 and j == 1)
 			{
-				TempX[i][j] = cos(angle);
+				Matrix[i][j] = cos(angle);
 			}
 			else if (i == 1 and j == 2)
 			{
-				TempX[i][j] = -sin(angle);
+				Matrix[i][j] = -sin(angle);
 			}
 			else if (i == 2 and j == 1)
 			{
-				TempX[i][j] = sin(angle);
+				Matrix[i][j] = sin(angle);
 			}
 			else if (i == 2 and j == 2)
 			{
-				TempX[i][j] = cos(angle);
+				Matrix[i][j] = cos(angle);
 			}
 			else if (i == 3 and j == 3)
 			{
-				TempX[i][j] = 1;
+				Matrix[i][j] = 1;
 			}
 			else
 			{
-				TempX[i][j] = 0;
+				Matrix[i][j] = 0;
 			}
 		}
 	}
@@ -278,38 +276,37 @@ void YRotationMatrix(float Matrix[4][4], float angle)
 {
 	// Rotation Y Matrix
 
-	float TempX[4][4];
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
 			if (i == 0 and j == 0)
 			{
-				TempX[i][j] = cos(angle);
+				Matrix[i][j] = cos(angle);
 			}
 			else if (i == 0 and j == 2)
 			{
-				TempX[i][j] = sin(angle);
+				Matrix[i][j] = sin(angle);
 			}
 			else if (i == 1 and j == 1)
 			{
-				TempX[i][j] = 1;
+				Matrix[i][j] = 1;
 			}
 			else if (i == 2 and j == 0)
 			{
-				TempX[i][j] = -sin(angle);
+				Matrix[i][j] = -sin(angle);
 			}
 			else if (i == 2 and j == 2)
 			{
-				TempX[i][j] = cos(angle);
+				Matrix[i][j] = cos(angle);
 			}
 			else if (i == 3 and j == 3)
 			{
-				TempX[i][j] = 1;
+				Matrix[i][j] = 1;
 			}
 			else
 			{
-				TempX[i][j] = 0;
+				Matrix[i][j] = 0;
 			}
 		}
 	}
@@ -319,38 +316,37 @@ void ZRotationMatrix(float Matrix[4][4], float angle)
 {
 	// Rotation Z Matrix
 
-	float TempX[4][4];
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
 		{
 			if (i == 0 and j == 0)
 			{
-				TempX[i][j] = cos(angle);
+				Matrix[i][j] = cos(angle);
 			}
 			else if (i == 0 and j == 1)
 			{
-				TempX[i][j] = -sin(angle);
+				Matrix[i][j] = -sin(angle);
 			}
 			else if (i == 1 and j == 0)
 			{
-				TempX[i][j] = sin(angle);
+				Matrix[i][j] = sin(angle);
 			}
 			else if (i == 1 and j == 1)
 			{
-				TempX[i][j] = cos(angle);
+				Matrix[i][j] = cos(angle);
 			}
 			else if (i == 2 and j == 2)
 			{
-				TempX[i][j] = 1;
+				Matrix[i][j] = 1;
 			}
 			else if (i == 3 and j == 3)
 			{
-				TempX[i][j] = 1;
+				Matrix[i][j] = 1;
 			}
 			else
 			{
-				TempX[i][j] = 0;
+				Matrix[i][j] = 0;
 			}
 		}
 	}

@@ -871,24 +871,36 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT13);
 
 				// Create an Empty Matrix
-				float RotationMatrix[4][4];
+				float RotationMatrixX[4][4];
+				float RotationMatrixY[4][4];
+				float RotationMatrixZ[4][4];
 
 				// Axis of Rotaion X
 				if (IsDlgButtonChecked(_hwnd, IDC_CHECK1))
 				{
 					// Create a Rotation Matrix given rotX, rotY, rotZ
-					XRotationMatrix(RotationMatrix, rotAngle);
+					XRotationMatrix(RotationMatrixX, rotAngle);
+
+					// Multiplying Rotation Matrix and RMF Matrix
+					MultiplyMatrix(MatrixRMF , RotationMatrixX);
 				}
 				// Axis of Rotaion Y
 				else if (IsDlgButtonChecked(_hwnd, IDC_CHECK2))
 				{
 					// Create a Rotation Matrix given rotX, rotY, rotZ
-					YRotationMatrix(RotationMatrix, rotAngle);
+					YRotationMatrix(RotationMatrixY, rotAngle);
+
+					// Multiplying Rotation Matrix and RMF Matrix
+					MultiplyMatrix(MatrixRMF , RotationMatrixY);
 				}
 				// Axis of Rotaion Z
 				else if (IsDlgButtonChecked(_hwnd, IDC_CHECK3))
 				{
-					ZRotationMatrix(RotationMatrix, rotAngle);
+					// Create a Rotation Matrix given rotX, rotY, rotZ
+					ZRotationMatrix(RotationMatrixZ, rotAngle);
+
+					// Multiplying Rotation Matrix and RMF Matrix
+					MultiplyMatrix(MatrixRMF, RotationMatrixZ);
 				}
 				// Given No Input From User
 				else
@@ -897,9 +909,6 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 					MessageBox(nullptr, TEXT("Please Select a Axis of Rotaion"), TEXT("No Input"), MB_OK);
 				}
 
-				// Multiplying Rotation Matrix and RMF Matrix
-				MultiplyMatrix(RotationMatrix, MatrixRMF);
-
 				// Getting Column-Major-Format
 				TransposeMatrix(MatrixCMF, MatrixRMF);
 
@@ -907,7 +916,6 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 
-				WriteToEditBox(_hwnd, IDC_EDIT16, comboItemIndex);
 			}
 			else if (comboItemIndex == 1)
 			{
