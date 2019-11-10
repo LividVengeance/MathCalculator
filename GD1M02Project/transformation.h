@@ -191,7 +191,6 @@ void TransposeMatrix(float Matrix[4][4], float Matrix2[4][4])
 
 void TranslateMatrix(float Matrix[4][4], float transX, float transY, float transZ)
 {
-	float Temp[4][4];
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -199,32 +198,36 @@ void TranslateMatrix(float Matrix[4][4], float transX, float transY, float trans
 		{
 			if (i == 0 and j == 3)
 			{
-				Temp[i][j] = transX;
+				Matrix[i][j] = transX;
 			}
 			else if (i == 1 and j == 3)
 			{
-				Temp[i][j] = transY;
+				Matrix[i][j] = transY;
 			}
 			else if (i == 2 and j == 3)
 			{
-				Temp[i][j] = transZ;
+				Matrix[i][j] = transZ;
 			}
 			else if (i == 3 and j == 3)
 			{
-				Temp[i][j] = 1;
+				Matrix[i][j] = 1;
+			}
+			else if (i == 0 and j == 0)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 1 and j == 1)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 2 and j == 2)
+			{
+				Matrix[i][j] = 1;
 			}
 			else
 			{
 				Matrix[i][j] = 0;
 			}
-		}
-	}
-
-	for (int q = 0; q < 4; q++)
-	{
-		for (int w = 0; w < 4; w++)
-		{
-			Matrix[q][w] = Temp[q][w];
 		}
 	}
 }

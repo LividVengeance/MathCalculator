@@ -850,15 +850,14 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 
 				// Multiplyig Translation Matrix With RMF Matrix
 				MultiplyMatrix(MatrixRMF, TransMatrix);
+				
 
 				// Getting Column-Major-Format
-				TransposeMatrix(MatrixCMF, MatrixRMF);
+				TransposeMatrix(MatrixRMF, MatrixCMF);
 
 				// Outputting to Boxes
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
-
-				WriteToEditBox(_hwnd, IDC_EDIT16, comboItemIndex);
 			}
 			else if (comboItemIndex == 2)
 			{
