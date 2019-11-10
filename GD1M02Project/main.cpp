@@ -936,17 +936,13 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				// Outputting to Boxes
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
-
-				WriteToEditBox(_hwnd, IDC_EDIT16, comboItemIndex);
 			}
 			else
 			{
 				//Setting RMF Matrix to Identity Matrix
-				//IDMatrix(_hwnd, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 
 				// Setting CMF Matrix to Identity Matrix
-				//IDMatrix(_hwnd, MatrixCMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 			}
 
