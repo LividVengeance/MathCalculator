@@ -697,6 +697,19 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 	LPARAM _lparam)
 {
 	HWND items = NULL;
+	/// Setup thangs
+
+	float MatrixRMF[4][4], MatrixRMFID[4][4], MatrixCMF[4][4], MatrixCMFID[4][4];
+
+	// Getting Input Box IDs
+	GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
+	GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
+
+	// Setting Defult To Identity Matrix
+	IDMatrix(_hwnd, MatrixRMF);
+	IDMatrix(_hwnd, MatrixCMF);
+
+	/// End of setup thangs
 	static int comboItemIndex;
 	switch (_msg)
 	{
@@ -732,21 +745,23 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 
 	case WM_COMMAND:
 	{
+		
 		if (HIWORD(_wparam) == CBN_SELCHANGE)
 		{
-			comboItemIndex = SendMessage((HWND)_lparam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0);
+			comboItemIndex = SendMessage((HWND)_lparam, (UINT)CB_GETCURSEL, (WPARAM)0, (LPARAM)0) + 1;
 		}
 
 		switch (LOWORD(_wparam))
 		{
+
 		case IDC_CHECK1:
 		{
-			// Allowing For Only Check One To Be Clicked
+			// Allowing For Only Check One (X) To Be Clicked
 			switch (HIWORD(_wparam))
 			{
 			case BN_CLICKED:
 			{
-				if (SendDlgItemMessage(_hwnd, IDC_CHECK3, BM_GETCHECK, 0, 0))
+				if (SendDlgItemMessage(_hwnd, IDC_CHECK1, BM_GETCHECK, 0, 0))
 				{
 					CheckDlgButton(_hwnd, IDC_CHECK2, 0);
 					CheckDlgButton(_hwnd, IDC_CHECK3, 0);
@@ -758,7 +773,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 		}
 		case IDC_CHECK2:
 		{
-			// Allowing For Only Check Two To Be Clicked
+			// Allowing For Only Check Two (Y) To Be Clicked
 			switch (HIWORD(_wparam))
 			{
 			case BN_CLICKED:
@@ -775,7 +790,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 		}
 		case IDC_CHECK3:
 		{
-			// Allowing For Only Check Three To Be Clicked
+			// Allowing For Only Check Three (Z) To Be Clicked
 			switch(HIWORD(_wparam))
 			{
 			case BN_CLICKED:
@@ -791,16 +806,11 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 			break;
 		}
 
-			// Compute
+
+		// Compute
 		case IDC_BUTTON4:
 		{
-			float MatrixRMF[4][4], MatrixRMFID[4][4], MatrixCMF[4][4], MatrixCMFID[4][4];
-
-			// Getting Input Box IDs
-			GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
-			GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
-
-			if (comboItemIndex == 0)
+			if (comboItemIndex == 3)
 			{
 				/// Scaling and Skewing
 
@@ -815,19 +825,17 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				// Creating a Scale Matrix Given Inputs
 				ScaleFactorMatrix(ScaleMatrix, scaleX, scaleY, scaleZ);
 
-				// Multiplyig Scale Matrix With RMF Matrix
 				MultiplyMatrix(MatrixRMF, ScaleMatrix);
 
 				// Getting Column-Major-Format
-				TransposeMatrix(MatrixCMF, MatrixRMF);
+				TransposeMatrix(MatrixRMF, MatrixCMF);
 
 				// Outputting to Boxes
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 
-				break;
 			}
-			else if (comboItemIndex == 1)
+			else if (comboItemIndex == 4)
 			{
 				/// Translation
 
@@ -850,7 +858,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 
-				break;
+				WriteToEditBox(_hwnd, IDC_EDIT16, comboItemIndex);
 			}
 			else if (comboItemIndex == 2)
 			{
@@ -886,6 +894,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				// Given No Input From User
 				else
 				{
+					WriteToEditBox(_hwnd, IDC_EDIT16, comboItemIndex);
 					MessageBox(nullptr, TEXT("Please Select a Axis of Rotaion"), TEXT("No Input"), MB_OK);
 				}
 
@@ -899,9 +908,9 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 
-				break;
+				WriteToEditBox(_hwnd, IDC_EDIT16, comboItemIndex);
 			}
-			else if (comboItemIndex == 3)
+			else if (comboItemIndex == 1)
 			{
 				/// Projection
 
@@ -921,24 +930,19 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 
-				break;
+				WriteToEditBox(_hwnd, IDC_EDIT16, comboItemIndex);
 			}
-
-			
-			/*
-			if (IsDlgButtonChecked(_hwnd, IDC_CHECK1))
+			else
 			{
-				// Setting RMF Matrix to Identity Matrix
-				GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
-				IDMatrix(_hwnd, MatrixRMF);
+				//Setting RMF Matrix to Identity Matrix
+				//IDMatrix(_hwnd, MatrixRMF);
 				TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
 
 				// Setting CMF Matrix to Identity Matrix
-				GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
-				IDMatrix(_hwnd, MatrixCMF);
+				//IDMatrix(_hwnd, MatrixCMF);
 				TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
 			}
-			*/
+
 			break;
 		}
 		return TRUE;

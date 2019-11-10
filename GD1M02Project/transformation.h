@@ -184,7 +184,7 @@ void TransposeMatrix(float Matrix[4][4], float Matrix2[4][4])
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			Matrix2[i][j] = Matrix[j][i];
+			Matrix2[j][i] = Matrix[i][j];
 		}
 	}
 }
