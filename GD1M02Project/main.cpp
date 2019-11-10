@@ -697,19 +697,24 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 	LPARAM _lparam)
 {
 	HWND items = NULL;
-	/// Setup thangs
+	/// Initializing some things
+	static bool someMeme = false;
 
-	float MatrixRMF[4][4], MatrixRMFID[4][4], MatrixCMF[4][4], MatrixCMFID[4][4];
+	static float MatrixRMF[4][4], MatrixRMFID[4][4], MatrixCMF[4][4], MatrixCMFID[4][4];
 
-	// Getting Input Box IDs
-	GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
-	GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
+	if (someMeme == false)
+	{
+		// Getting Input Box IDs
+		GetIDTransformMatrixRMF(_hwnd, MatrixRMFID);
+		GetIDTransformMatrixCMF(_hwnd, MatrixCMFID);
 
-	// Setting Defult To Identity Matrix
-	IDMatrix(_hwnd, MatrixRMF);
-	IDMatrix(_hwnd, MatrixCMF);
+		// Setting Defult To Identity Matrix
+		IDMatrix(_hwnd, MatrixRMF);
+		IDMatrix(_hwnd, MatrixCMF);
 
-	/// End of setup thangs
+		someMeme = true;
+	}
+
 	static int comboItemIndex;
 	switch (_msg)
 	{
@@ -805,7 +810,29 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 			}
 			break;
 		}
+		// Rand Fill
+		case IDC_BUTTON18:
+		{
+			srand(time(NULL));
 
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 4; j++)
+				{
+					float randNum = rand() % 100 + 1;
+					
+					MatrixRMF[i][j] = randNum;
+				}
+			}
+
+			// Getting Column-Major-Format
+			TransposeMatrix(MatrixRMF, MatrixCMF);
+
+			// Outputting to Boxes
+			TrasnsToEdit(_hwnd, MatrixRMFID, MatrixRMF);
+			TrasnsToEdit(_hwnd, MatrixCMFID, MatrixCMF);
+			break;
+		}
 
 		// Compute
 		case IDC_BUTTON4:
@@ -850,7 +877,6 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 
 				// Multiplyig Translation Matrix With RMF Matrix
 				MultiplyMatrix(MatrixRMF, TransMatrix);
-				
 
 				// Getting Column-Major-Format
 				TransposeMatrix(MatrixRMF, MatrixCMF);
