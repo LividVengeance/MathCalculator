@@ -89,6 +89,7 @@
 #define IDC_EDIT39                      1039
 #define IDC_CHECK6                      1039
 #define IDC_EDIT40                      1040
+#define IDC_CHECK7                      1040
 #define IDC_EDIT41                      1041
 #define IDC_EDIT42                      1042
 #define IDC_EDIT43                      1043

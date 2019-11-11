@@ -352,7 +352,92 @@ void ZRotationMatrix(float Matrix[4][4], float angle)
 	}
 }
 
-void ProjectionMatrix()
+void ProjectionMatrixX(float Matrix[4][4], float distance)
 {
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i == 0 and j == 0)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 1 and j == 1)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 2 and j == 2)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 3 and j == 0)
+			{
+				Matrix[i][j] = 1 / distance;
+			}
+			else
+			{
+				Matrix[i][j] = 0;
+			}
+		}
+	}
+}
 
+void ProjectionMatrixY(float Matrix[4][4], float distance)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i == 0 and j == 0)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 1 and j == 1)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 2 and j == 2)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 3 and j == 1)
+			{
+				Matrix[i][j] = 1 / distance;
+			}
+			else
+			{
+				Matrix[i][j] = 0;
+			}
+		}
+	}
+}
+
+void ProjectionMatrixZ(float Matrix[4][4], float distance)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i == 0 and j == 0)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 1 and j == 1)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 2 and j == 2)
+			{
+				Matrix[i][j] = 1;
+			}
+			else if (i == 3 and j == 2)
+			{
+				Matrix[i][j] = 1 / distance;
+			}
+			else
+			{
+				Matrix[i][j] = 0;
+			}
+		}
+	}
 }
