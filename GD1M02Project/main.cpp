@@ -946,7 +946,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				bool rotY = IsDlgButtonChecked(_hwnd, IDC_CHECK2);
 				bool rotZ = IsDlgButtonChecked(_hwnd, IDC_CHECK3);
 
-				float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT13);
+				float rotAngle = ReadFromEditBox(_hwnd, IDC_EDIT28);
 
 				// Create an Empty Matrix
 				float RotationMatrixX[4][4];
@@ -961,6 +961,7 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 
 					// Multiplying Rotation Matrix and RMF Matrix
 					MultiplyMatrix(MatrixRMF , RotationMatrixX);
+				
 
 					// Getting Column-Major-Format
 					TransposeMatrix(MatrixRMF, MatrixCMF);
@@ -1013,15 +1014,18 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				/// Projection
 
 				// Projection Inputs
-				float proDist = ReadFromEditBox(_hwnd, IDC_EDIT13);
+				float proDist = ReadFromEditBox(_hwnd, IDC_EDIT15);
+
+				float projMatrixX[4][4];
+				float projMatrixY[4][4];
+				float projMatrixZ[4][4];
 
 				if (IsDlgButtonChecked(_hwnd, IDC_CHECK4))
 				{
-					float projMatrix[4][4];
-					ProjectionMatrixX(projMatrix, proDist);
+					ProjectionMatrixX(projMatrixX, proDist);
 
 					// Multiplying Projection Matrix and RMF Matrix
-					MultiplyMatrix(MatrixRMF, projMatrix);
+					MultiplyMatrix(MatrixRMF, projMatrixX);
 
 					// Getting Column-Major-Format
 					TransposeMatrix(MatrixRMF, MatrixCMF);
@@ -1032,11 +1036,10 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				}
 				else if (IsDlgButtonChecked(_hwnd, IDC_CHECK6))
 				{
-					float projMatrix[4][4];
-					ProjectionMatrixY(projMatrix, proDist);
+					ProjectionMatrixY(projMatrixY, proDist);
 
 					// Multiplying Projection Matrix and RMF Matrix
-					MultiplyMatrix(MatrixRMF, projMatrix);
+					MultiplyMatrix(MatrixRMF, projMatrixY);
 
 					// Getting Column-Major-Format
 					TransposeMatrix(MatrixRMF, MatrixCMF);
@@ -1047,11 +1050,10 @@ BOOL CALLBACK TransformationDlgProc(HWND _hwnd,
 				}
 				else if (IsDlgButtonChecked(_hwnd, IDC_CHECK7))
 				{
-					float projMatrix[4][4];
-					ProjectionMatrixZ(projMatrix, proDist);
+					ProjectionMatrixZ(projMatrixZ, proDist);
 
 					// Multiplying Projection Matrix and RMF Matrix
-					MultiplyMatrix(MatrixRMF, projMatrix);
+					MultiplyMatrix(MatrixRMF, projMatrixZ);
 
 					// Getting Column-Major-Format
 					TransposeMatrix(MatrixRMF, MatrixCMF);
